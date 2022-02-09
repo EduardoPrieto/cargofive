@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %} {% block content %}
+
+
+
+
+<div class="card mt-5" style="width: 26rem;">
+
+    <div class="card-body ">
+
+        <h6 class="card-subtitle mb-2 text-muted">Por favor, ingrese la información solicitada</h6>
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name" class="col-sm-4 col-form-label mb-1">Nombre</label> {{form.name}}
+
+                <label for="apellidos" class="col-sm-4 col-form-label mb-1">Fecha</label> {{form.date}}
+            </div>
+
+            <div class="drag-drop mt-2">
+                <span class="desc form-label">Pulse aquí para añadir archivos:</span> {{form.file}}
+            </div>
+
+
+
+            <button type="submit" class="btn btn-primary mt-2">Guardar</button>
+
+        </form>
+        <h6 class="mt-4" style="color: {{color}};">{{message}}</h6>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'core/base.html' %} {% block button %}
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<div class="row">
+    <div class="col-sm">
+
+        <table class="table table-striped table-bordered table-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Contrato 1</th>
+                    <th>Fecha</th>
+                    <th>Contrato 2</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tr>
+                <td>{{contract_1.name}}</td>
+                <td>{{contract_1.date}}</td>
+                <td>{{contract_2.name}}</td>
+                <td>{{contract_2.date}}</td>
+            </tr>        
+        </table>
+
+        <table class="table table-striped table-bordered table-sm">
+            <tr>
+                <th>Filas sin diferencias</th>
+                <td>{{ diffs.diff_t}}</td>
+            </tr>
+            <tr>
+                <th>Filas con diferencias</th>
+                <td>{{ diffs.diff_f}}</td>
+            </tr>
+            <tr>
+                <th>Datos sin diferencias</th>
+                <td>{{differences.difference_t}}</td>
+            </tr>
+            <tr>
+                <th>Datos con diferencias</th>
+                <td>{{ differences.difference_f}}</td>
+            </tr>
+        </table>
+
+        <table class="table table-striped table-bordered table-sm">
+            <tr>
+                <td><p class="text-justify"></p>Los datos que que son diferentes entre uno y otro contrato se separan con un guión  ' <b> - </b>' poniendo los datos del Contrato <b>{{contract_1.name}}</b> al lado izquierdo del guión y los datos de Contrato <b>{{contract_2.name}}</b> al lado derecho, si el dato en cuestión no tiene ninguna diferencia entre el Contrato <b>{{contract_1.name}}</b> y el Contrato <b>{{contract_2.name}}</b> este se verá cómo se vería normalmente.</p></td>
+            </tr>        
+        </table>
+
+    </div>
+    <div class="col-sm">
+        <!-- Se opto por el uso de Highcharts para facilitar la contrucción de un gráfico de barras para representar la diferencia entre los datos-->
+        <figure class="highcharts-figure">
+            <div id="container"></div>
+        </figure>
+    </div>
+</div>
+
+<h4 class="mt-2"></h4>
+
+<table class="table table-striped table-bordered table-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>POL</th>
+            <th>POD</th>
+            <th>Routing</th>
+            <th>ETT</th>
+            <th>Curr.</th>
+            <th>20'GP</th>
+            <th>40'GP</th>
+            <th>40'HC</th>
+            <th>20'FR</th>
+            <th>20'OT</th>
+            <th>40'FH</th>
+            <th>40'FR</th>
+            <th>40'OH</th>
+            <th>40'OT</th>
+            <th>20'TK</th>
+            <th>40'RH</th>
+            <th>40'RH</th>
+        </tr>
+    </thead>
+    {% for item in df.d %}
+    <tr>
+        <td>{{item.POL}}</td>
+        <td>{{item.POD}}</td>
+        <td>{{item.Routing}}</td>
+        <td>{{item.ETT}}</td>
+        <td>{{item.Curr}}</td>
+        <td>{{item.20GP}}</td>
+        <td>{{item.40GP}}</td>
+        <td>{{item.40HC}}</td>
+        <td>{{item.20FR}}</td>
+        <td>{{item.20OT}}</td>
+        <td>{{item.40FH}}</td>
+        <td>{{item.40FR}}</td>
+        <td>{{item.40OH}}</td>
+        <td>{{item.40OT}}</td>
+        <td>{{item.20TK}}</td>
+        <td>{{item.40RH}}</td>
+        <td>{{item.40RH1}}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+<script type="text/javascript">
+
+    Highcharts.chart('container', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Gráfico de cambios'
+        },
+        accessibility: {
+            announceNewData: {
+                enabled: true
+            }
+        },
+        xAxis: {
+            type: ''
+        },
+        yAxis: {
+            title: {
+                text: 'Datos'
+            }
+
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b><br/>'
+        },
+
+        series: [{
+            name: "Datos",
+            colorByPoint: true,
+            data: [{
+                name: "Datos sin diferencias",
+                y: {{differences.difference_t}},
+            }, {
+                name: "Datos con diferencias",
+                y: {{differences.difference_f}},
+            }]
+        }]
+    });
+</script>
+{% endblock %}
